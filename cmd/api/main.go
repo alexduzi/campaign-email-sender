@@ -1,10 +1,10 @@
 package main
 
 import (
-	"encoding/json"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/render"
 )
 
 func main() {
@@ -28,13 +28,10 @@ func main() {
 	})
 
 	r.Get("/json", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
 
-		obj := map[string]string{"message": "success"}
+		obj := map[string]string{"message": "success!"}
 
-		b, _ := json.Marshal(obj)
-
-		w.Write(b)
+		render.JSON(w, r, obj)
 	})
 
 	http.ListenAndServe(":3000", r)
