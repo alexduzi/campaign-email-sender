@@ -33,7 +33,7 @@ var (
 		},
 	}
 
-	service = Service{}
+	service = ServiceImpl{}
 )
 
 func Test_CreateCampaign(t *testing.T) {
