@@ -9,3 +9,7 @@ POST http://localhost:3000/campaigns
     "content": "change password",
     "emails": ["test@gmail.com", "test2@gmail.com"]
 }
+
+###
+
+GET http://localhost:3000/campaigns/d189651mcbhihuhv0g

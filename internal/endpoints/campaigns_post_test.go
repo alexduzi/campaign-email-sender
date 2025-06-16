@@ -3,6 +3,7 @@ package endpoints
 import (
 	"bytes"
 	"campaignemailsender/internal/contract"
+	"campaignemailsender/internal/domain/campaign"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -20,6 +21,16 @@ type serviceMock struct {
 func (r *serviceMock) Create(newCampaign contract.NewCampaign) (string, error) {
 	args := r.Called(newCampaign)
 	return args.String(0), args.Error(1)
+}
+
+func (r *serviceMock) Get() ([]campaign.Campaign, error) {
+	args := r.Called()
+	return nil, args.Error(1)
+}
+
+func (r *serviceMock) GetByID(id string) (*contract.CampaignReduced, error) {
+	args := r.Called(id)
+	return nil, args.Error(1)
 }
 
 var (
