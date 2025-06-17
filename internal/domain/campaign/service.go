@@ -42,11 +42,10 @@ func (s *ServiceImpl) GetByID(id string) (*contract.CampaignReduced, error) {
 	if err != nil {
 		return nil, err
 	}
-	reduced := contract.CampaignReduced{}
-	reduced.ID = result.ID
-	reduced.Name = result.Name
-	reduced.Content = result.Content
-	reduced.Status = result.Status
-
-	return &reduced, nil
+	return &contract.CampaignReduced{
+		ID:      result.ID,
+		Name:    result.Name,
+		Content: result.Content,
+		Status:  result.Status,
+	}, nil
 }
