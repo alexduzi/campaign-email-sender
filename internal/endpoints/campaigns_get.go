@@ -18,5 +18,9 @@ func (h *Handler) GetByID(w http.ResponseWriter, r *http.Request) (interface{}, 
 
 	result, err := h.CampaignService.GetByID(id)
 
+	if err != nil {
+		return nil, 400, err
+	}
+
 	return result, 200, err
 }

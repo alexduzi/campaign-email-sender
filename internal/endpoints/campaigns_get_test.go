@@ -1,0 +1,77 @@
+package endpoints
+
+import (
+	"campaignemailsender/internal/contract"
+	"campaignemailsender/internal/domain/campaign"
+	"errors"
+	"net/http"
+	"net/http/httptest"
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
+)
+
+type serviceGetMock struct {
+	mock.Mock
+}
+
+func (r *serviceGetMock) Create(newCampaign contract.NewCampaign) (string, error) {
+	args := r.Called(newCampaign)
+	return args.String(0), args.Error(1)
+}
+
+func (r *serviceGetMock) Get() ([]campaign.Campaign, error) {
+	args := r.Called()
+	return nil, args.Error(1)
+}
+
+func (r *serviceGetMock) GetByID(id string) (*contract.CampaignReduced, error) {
+	args := r.Called(id)
+	if args.Error(1) != nil {
+		return nil, args.Error(1)
+	}
+	return args.Get(0).(*contract.CampaignReduced), nil
+}
+
+func Test_CampaignGet_should_return_campaign(t *testing.T) {
+	assert := assert.New(t)
+	campaignResponse := contract.CampaignReduced{
+		ID:      "343",
+		Name:    "Hi everyone",
+		Content: "Hi everyone",
+		Status:  "Pending",
+	}
+	service := new(serviceGetMock)
+	service.On("GetByID", mock.Anything).Return(&campaignResponse, nil)
+
+	handler := Handler{CampaignService: service}
+
+	req, _ := http.NewRequest("GET", "/", nil)
+	res := httptest.NewRecorder()
+
+	response, status, _ := handler.GetByID(res, req)
+
+	assert.Equal(200, status)
+	assert.Equal(campaignResponse.ID, response.(*contract.CampaignReduced).ID)
+	assert.Equal(campaignResponse.Name, response.(*contract.CampaignReduced).Name)
+	assert.Equal(campaignResponse.Content, response.(*contract.CampaignReduced).Content)
+	assert.Equal(campaignResponse.Status, response.(*contract.CampaignReduced).Status)
+}
+
+func Test_CampaignGet_should_return_error_when_campaign_dont_exists(t *testing.T) {
+	assert := assert.New(t)
+
+	service := new(serviceGetMock)
+	service.On("GetByID", mock.Anything).Return(nil, errors.New("error"))
+
+	handler := Handler{CampaignService: service}
+
+	req, _ := http.NewRequest("GET", "/", nil)
+	res := httptest.NewRecorder()
+
+	_, status, err := handler.GetByID(res, req)
+
+	assert.Equal(400, status)
+	assert.NotNil(err)
+}
