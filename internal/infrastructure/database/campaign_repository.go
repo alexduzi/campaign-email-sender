@@ -1,7 +1,7 @@
 package database
 
 import (
-	"campaignemailsender/internal/domain/campaign"
+	model "campaignemailsender/internal/domain/campaign"
 
 	"gorm.io/gorm"
 )
@@ -10,22 +10,36 @@ type CampaignRepository struct {
 	Db *gorm.DB
 }
 
-func (c *CampaignRepository) Save(campaign *campaign.Campaign) error {
-	tx := c.Db.Save(campaign)
+func (c *CampaignRepository) Create(campaign *model.Campaign) error {
+	tx := c.Db.Create(campaign)
 
 	return tx.Error
 }
 
-func (c *CampaignRepository) Get() ([]campaign.Campaign, error) {
-	var campaigns []campaign.Campaign
+func (c *CampaignRepository) Get() ([]model.Campaign, error) {
+	var campaigns []model.Campaign
 	tx := c.Db.Find(&campaigns)
 
 	return campaigns, tx.Error
 }
 
-func (c *CampaignRepository) GetByID(id string) (*campaign.Campaign, error) {
-	var campaign campaign.Campaign
-	tx := c.Db.First(&campaign, "id = ?", id)
+func (c *CampaignRepository) GetByID(id string) (*model.Campaign, error) {
+	var campaign model.Campaign
+	tx := c.Db.Preload("Contacts").First(&campaign, "id = ?", id)
 
 	return &campaign, tx.Error
+}
+
+func (c *CampaignRepository) Update(campaign *model.Campaign) error {
+	tx := c.Db.Save(campaign)
+
+	return tx.Error
+}
+
+func (c *CampaignRepository) Delete(campaign *model.Campaign) error {
+	c.Db.Select("Contacts").Delete(campaign)
+
+	tx := c.Db.Delete(campaign)
+
+	return tx.Error
 }

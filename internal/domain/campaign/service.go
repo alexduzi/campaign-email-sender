@@ -12,6 +12,7 @@ type Service interface {
 	Get() ([]Campaign, error)
 	GetByID(id string) (*contract.CampaignReduced, error)
 	Cancel(id string) error
+	Delete(id string) error
 }
 
 type ServiceImpl struct {
@@ -25,7 +26,7 @@ func (s *ServiceImpl) Create(newCampaign contract.NewCampaign) (string, error) {
 		return "", err
 	}
 
-	err = s.Repository.Save(campaign)
+	err = s.Repository.Create(campaign)
 
 	if err != nil {
 		return "", internalerrors.ErrInternal
@@ -46,10 +47,11 @@ func (s *ServiceImpl) GetByID(id string) (*contract.CampaignReduced, error) {
 		return nil, err
 	}
 	return &contract.CampaignReduced{
-		ID:      result.ID,
-		Name:    result.Name,
-		Content: result.Content,
-		Status:  result.Status,
+		ID:                   result.ID,
+		Name:                 result.Name,
+		Content:              result.Content,
+		Status:               result.Status,
+		AmountOfEmailsToSend: len(result.Contacts),
 	}, nil
 }
 
@@ -65,7 +67,28 @@ func (s *ServiceImpl) Cancel(id string) error {
 
 	result.Cancel()
 
-	errSave := s.Repository.Save(result)
+	errSave := s.Repository.Update(result)
+
+	if errSave != nil {
+		return internalerrors.ErrInternal
+	}
+
+	return nil
+}
+
+func (s *ServiceImpl) Delete(id string) error {
+	result, err := s.Repository.GetByID(id)
+	if err != nil {
+		return err
+	}
+
+	if result.Status != Pending {
+		return errors.New("campaign status invalid")
+	}
+
+	result.Delete()
+
+	errSave := s.Repository.Delete(result)
 
 	if errSave != nil {
 		return internalerrors.ErrInternal

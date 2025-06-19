@@ -5,15 +5,19 @@ GET http://localhost:3000/campaigns
 POST http://localhost:3000/campaigns
 
 {
-    "name": "mouse 2",
+    "name": "mouse 6",
     "content": "change password",
-    "emails": ["test@gmail.com", "test2@gmail.com"]
+    "emails": ["test1@gmail.com", "test2@gmail.com", "test3@gmail.com"]
 }
 
 ###
 
-GET http://localhost:3000/campaigns/d19kvfpmcbhr2h31egq0
+GET http://localhost:3000/campaigns/d1a3hb9mcbhn9rqrtnt0
 
 ###
 
-PATCH http://localhost:3000/cancel/d19kv1pmcbhr2h31egog
+PATCH http://localhost:3000/cancel/d1a3dnhmcbhmt2e6j71g
+
+###
+
+DELETE http://localhost:3000/d1a3dqhmcbhmt2e6j730
