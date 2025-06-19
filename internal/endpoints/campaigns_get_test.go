@@ -2,7 +2,7 @@ package endpoints
 
 import (
 	"campaignemailsender/internal/contract"
-	"campaignemailsender/internal/domain/campaign"
+	internalmock "campaignemailsender/internal/test/mock"
 	"errors"
 	"net/http"
 	"net/http/httptest"
@@ -12,28 +12,6 @@ import (
 	"github.com/stretchr/testify/mock"
 )
 
-type serviceGetMock struct {
-	mock.Mock
-}
-
-func (r *serviceGetMock) Create(newCampaign contract.NewCampaign) (string, error) {
-	args := r.Called(newCampaign)
-	return args.String(0), args.Error(1)
-}
-
-func (r *serviceGetMock) Get() ([]campaign.Campaign, error) {
-	args := r.Called()
-	return nil, args.Error(1)
-}
-
-func (r *serviceGetMock) GetByID(id string) (*contract.CampaignReduced, error) {
-	args := r.Called(id)
-	if args.Error(1) != nil {
-		return nil, args.Error(1)
-	}
-	return args.Get(0).(*contract.CampaignReduced), nil
-}
-
 func Test_CampaignGet_should_return_campaign(t *testing.T) {
 	assert := assert.New(t)
 	campaignResponse := contract.CampaignReduced{
@@ -42,7 +20,7 @@ func Test_CampaignGet_should_return_campaign(t *testing.T) {
 		Content: "Hi everyone",
 		Status:  "Pending",
 	}
-	service := new(serviceGetMock)
+	service := new(internalmock.CampaignServiceMock)
 	service.On("GetByID", mock.Anything).Return(&campaignResponse, nil)
 
 	handler := Handler{CampaignService: service}
@@ -62,7 +40,7 @@ func Test_CampaignGet_should_return_campaign(t *testing.T) {
 func Test_CampaignGet_should_return_error_when_campaign_dont_exists(t *testing.T) {
 	assert := assert.New(t)
 
-	service := new(serviceGetMock)
+	service := new(internalmock.CampaignServiceMock)
 	service.On("GetByID", mock.Anything).Return(nil, errors.New("error"))
 
 	handler := Handler{CampaignService: service}

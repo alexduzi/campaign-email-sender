@@ -13,3 +13,7 @@ POST http://localhost:3000/campaigns
 ###
 
 GET http://localhost:3000/campaigns/d19kvfpmcbhr2h31egq0
+
+###
+
+PATCH http://localhost:3000/cancel/d19kv1pmcbhr2h31egog
