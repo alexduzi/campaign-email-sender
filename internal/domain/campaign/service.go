@@ -20,7 +20,7 @@ type ServiceImpl struct {
 }
 
 func (s *ServiceImpl) Create(newCampaign contract.NewCampaign) (string, error) {
-	campaign, err := NewCampaign(newCampaign.Name, newCampaign.Content, newCampaign.Emails)
+	campaign, err := NewCampaign(newCampaign.Name, newCampaign.Content, newCampaign.Emails, newCampaign.CreatedBy)
 
 	if err != nil {
 		return "", err
@@ -53,6 +53,7 @@ func (s *ServiceImpl) GetByID(id string) (*contract.CampaignReduced, error) {
 		Content:              result.Content,
 		Status:               result.Status,
 		AmountOfEmailsToSend: len(result.Contacts),
+		CreatedBy:            result.CreatedBy,
 	}, nil
 }
 

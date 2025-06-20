@@ -23,7 +23,10 @@ func (s *CampaignServiceMock) Get() ([]model.Campaign, error) {
 
 func (s *CampaignServiceMock) GetByID(id string) (*contract.CampaignReduced, error) {
 	args := s.Called(id)
-	return nil, args.Error(1)
+	if args.Error(1) != nil {
+		return nil, args.Error(1)
+	}
+	return args.Get(0).(*contract.CampaignReduced), nil
 }
 
 func (s *CampaignServiceMock) Delete(id string) error {
