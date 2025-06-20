@@ -2,6 +2,7 @@ package campaign
 
 import (
 	"campaignemailsender/internal/contract"
+
 	// "campaignemailsender/internal/domain/campaign"
 	internalerrors "campaignemailsender/internal/internal-errors"
 	"errors"
@@ -44,8 +45,9 @@ func (s *ServiceImpl) Get() ([]Campaign, error) {
 func (s *ServiceImpl) GetByID(id string) (*contract.CampaignReduced, error) {
 	result, err := s.Repository.GetByID(id)
 	if err != nil {
-		return nil, err
+		return nil, internalerrors.GetError(err)
 	}
+
 	return &contract.CampaignReduced{
 		ID:                   result.ID,
 		Name:                 result.Name,
@@ -58,7 +60,7 @@ func (s *ServiceImpl) GetByID(id string) (*contract.CampaignReduced, error) {
 func (s *ServiceImpl) Cancel(id string) error {
 	result, err := s.Repository.GetByID(id)
 	if err != nil {
-		return err
+		return internalerrors.GetError(err)
 	}
 
 	if result.Status != Pending {
@@ -79,7 +81,7 @@ func (s *ServiceImpl) Cancel(id string) error {
 func (s *ServiceImpl) Delete(id string) error {
 	result, err := s.Repository.GetByID(id)
 	if err != nil {
-		return err
+		return internalerrors.GetError(err)
 	}
 
 	if result.Status != Pending {

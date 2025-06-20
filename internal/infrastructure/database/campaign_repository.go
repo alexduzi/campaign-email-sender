@@ -26,7 +26,6 @@ func (c *CampaignRepository) Get() ([]model.Campaign, error) {
 func (c *CampaignRepository) GetByID(id string) (*model.Campaign, error) {
 	var campaign model.Campaign
 	tx := c.Db.Preload("Contacts").First(&campaign, "id = ?", id)
-
 	return &campaign, tx.Error
 }
 
