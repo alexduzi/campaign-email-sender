@@ -1,8 +1,8 @@
-package mock
+package internalmock
 
 import (
 	"campaignemailsender/internal/contract"
-	"campaignemailsender/internal/domain/campaign"
+	model "campaignemailsender/internal/domain/campaign"
 
 	"github.com/stretchr/testify/mock"
 )
@@ -16,7 +16,7 @@ func (s *CampaignServiceMock) Create(newCampaign contract.NewCampaign) (string, 
 	return args.String(0), args.Error(1)
 }
 
-func (s *CampaignServiceMock) Get() ([]campaign.Campaign, error) {
+func (s *CampaignServiceMock) Get() ([]model.Campaign, error) {
 	args := s.Called()
 	return nil, args.Error(1)
 }
@@ -24,11 +24,6 @@ func (s *CampaignServiceMock) Get() ([]campaign.Campaign, error) {
 func (s *CampaignServiceMock) GetByID(id string) (*contract.CampaignReduced, error) {
 	args := s.Called(id)
 	return nil, args.Error(1)
-}
-
-func (s *CampaignServiceMock) Cancel(id string) error {
-	args := s.Called(id)
-	return args.Error(0)
 }
 
 func (s *CampaignServiceMock) Delete(id string) error {

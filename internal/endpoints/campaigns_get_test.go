@@ -2,7 +2,7 @@ package endpoints
 
 import (
 	"campaignemailsender/internal/contract"
-	internalmock "campaignemailsender/internal/test/mock"
+	internalmock "campaignemailsender/internal/test/internal-mock"
 	"errors"
 	"net/http"
 	"net/http/httptest"

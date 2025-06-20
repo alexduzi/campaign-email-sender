@@ -12,7 +12,6 @@ type Service interface {
 	Create(newCampaign contract.NewCampaign) (string, error)
 	Get() ([]Campaign, error)
 	GetByID(id string) (*contract.CampaignReduced, error)
-	Cancel(id string) error
 	Delete(id string) error
 }
 
@@ -55,27 +54,6 @@ func (s *ServiceImpl) GetByID(id string) (*contract.CampaignReduced, error) {
 		Status:               result.Status,
 		AmountOfEmailsToSend: len(result.Contacts),
 	}, nil
-}
-
-func (s *ServiceImpl) Cancel(id string) error {
-	result, err := s.Repository.GetByID(id)
-	if err != nil {
-		return internalerrors.GetError(err)
-	}
-
-	if result.Status != Pending {
-		return errors.New("campaign status invalid")
-	}
-
-	result.Cancel()
-
-	errSave := s.Repository.Update(result)
-
-	if errSave != nil {
-		return internalerrors.ErrInternal
-	}
-
-	return nil
 }
 
 func (s *ServiceImpl) Delete(id string) error {
