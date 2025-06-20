@@ -32,6 +32,29 @@ services:
       - pg-docker
     networks:
       - dev-network
+  # ====================================================================================================================
+  # KEYCLOAK
+  # ====================================================================================================================
+  keycloak-docker:
+    image: quay.io/keycloak/keycloak:21.1.1
+    container_name: dev-keycloak
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin123
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://pg-docker:5432/campaigndb
+      KC_DB_USERNAME: postgres
+      KC_DB_PASSWORD: 1234567
+      KC_HOSTNAME_STRICT: false
+      KC_HOSTNAME_STRICT_HTTPS: false
+      KC_HTTP_ENABLED: true
+    command: start-dev
+    ports:
+      - "8080:8080"
+    depends_on:
+      - pg-docker
+    networks:
+      - dev-network
 # ======================================================================================================================
 # REDE
 # ======================================================================================================================
