@@ -39,6 +39,10 @@ func (c *Campaign) Delete() {
 	c.Status = Deleted
 }
 
+func (c *Campaign) Done() {
+	c.Status = Done
+}
+
 func NewCampaign(name string, content string, emails []string, createdBy string) (*Campaign, error) {
 	campaignId := xid.New().String()
 
