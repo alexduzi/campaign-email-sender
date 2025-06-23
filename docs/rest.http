@@ -11,14 +11,14 @@ POST {{url}}/campaigns
 Authorization: Bearer {{access_token}}
 
 {
-    "name": "Test send email",
+    "name": "Test send email 10",
     "content": "Test sending email body!",
     "emails": ["duzihd@gmail.com", "test2@gmail.com", "test3@gmail.com"]
 }
 
 ###
 
-GET {{url}}/campaigns/d1assapmcbhi18ko4i7g
+GET {{url}}/campaigns/d1cq8r9mcbhuh8v6hm00
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
@@ -43,6 +43,6 @@ GET {{url}}/ping
 Content-Type: application/json
 
 ###
-POST {{url}}/campaigns/start/d1assapmcbhi18ko4i7g
+POST {{url}}/campaigns/start/d1cr9h9mcbhococ03sp0
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
