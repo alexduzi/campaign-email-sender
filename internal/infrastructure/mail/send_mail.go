@@ -3,13 +3,14 @@ package mailer
 import (
 	"campaignemailsender/internal/domain/campaign"
 	"fmt"
+	"log"
 	"os"
 
 	"gopkg.in/gomail.v2"
 )
 
 func SendEmail(campaign *campaign.Campaign) (err error) {
-	fmt.Println("Sending Email...")
+	log.Println("Sending Email...")
 
 	d := gomail.NewDialer(os.Getenv("EMAIL_SMTP"), 587, os.Getenv("EMAIL_USER"), os.Getenv("EMAIL_PASSWORD"))
 	// d.TLSConfig = &tls.Config{InsecureSkipVerify: true}

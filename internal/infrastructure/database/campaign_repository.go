@@ -48,6 +48,6 @@ func (c *CampaignRepository) GetCampaignsToBeSent() ([]model.Campaign, error) {
 	tx := c.Db.Preload("Contacts").Find(&campaigns,
 		"status = ? and date_part('minute', now()::timestamp - updated_on::timestamp) > ?",
 		model.Started,
-		0)
+		1)
 	return campaigns, tx.Error
 }

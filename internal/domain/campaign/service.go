@@ -13,6 +13,7 @@ type Service interface {
 	GetByID(id string) (*contract.CampaignReduced, error)
 	Delete(id string) error
 	Start(id string) error
+	SendEmailAndUpdateStatus(campaign *Campaign)
 }
 
 type ServiceImpl struct {
@@ -81,15 +82,7 @@ func (s *ServiceImpl) Start(id string) error {
 		return err
 	}
 
-	// go func() {
-	// 	err := s.SendEmail(result)
-	// 	if err != nil {
-	// 		result.Fail()
-	// 	} else {
-	// 		result.Done()
-	// 	}
-	// 	s.Repository.Update(result)
-	// }()
+	go s.SendEmailAndUpdateStatus(result)
 
 	result.Started()
 
@@ -99,6 +92,16 @@ func (s *ServiceImpl) Start(id string) error {
 	}
 
 	return nil
+}
+
+func (s *ServiceImpl) SendEmailAndUpdateStatus(campaign *Campaign) {
+	err := s.SendEmail(campaign)
+	if err != nil {
+		campaign.Fail()
+	} else {
+		campaign.Done()
+	}
+	s.Repository.Update(campaign)
 }
 
 func (s *ServiceImpl) getCampaignWithStatusValidation(id string) (*Campaign, error) {
