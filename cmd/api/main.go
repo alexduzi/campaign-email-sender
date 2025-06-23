@@ -4,6 +4,7 @@ import (
 	"campaignemailsender/internal/domain/campaign"
 	"campaignemailsender/internal/endpoints"
 	"campaignemailsender/internal/infrastructure/database"
+	mailer "campaignemailsender/internal/infrastructure/mail"
 	"log"
 	"net/http"
 
@@ -29,6 +30,7 @@ func main() {
 
 	service := campaign.ServiceImpl{
 		Repository: &database.CampaignRepository{Db: db},
+		SendEmail:  mailer.SendEmail,
 	}
 
 	handler := endpoints.Handler{CampaignService: &service}
@@ -43,6 +45,7 @@ func main() {
 		r.Get("/", endpoints.HandlerError(handler.CampaignGet))
 		r.Get("/{id}", endpoints.HandlerError(handler.GetByID))
 		r.Delete("/{id}", endpoints.HandlerError(handler.CampaignDelete))
+		r.Post("/start/{id}", endpoints.HandlerError(handler.CampaignStart))
 	})
 
 	http.ListenAndServe(":3000", r)

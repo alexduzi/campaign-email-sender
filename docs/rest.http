@@ -18,7 +18,7 @@ Authorization: Bearer {{access_token}}
 
 ###
 
-GET {{url}}/campaigns/d1aqnbpmcbhgokk0ttu0
+GET {{url}}/campaigns/d1assapmcbhi18ko4i7g
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
@@ -41,3 +41,8 @@ client_id=emailn&username=duzihd@gmail.com&password=123456&grant_type=password
 ###
 GET {{url}}/ping
 Content-Type: application/json
+
+###
+POST {{url}}/campaigns/start/d1assapmcbhi18ko4i7g
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
