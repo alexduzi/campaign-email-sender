@@ -5,7 +5,6 @@ import (
 
 	// "campaignemailsender/internal/domain/campaign"
 	internalerrors "campaignemailsender/internal/internal-errors"
-	"errors"
 )
 
 type Service interface {
@@ -46,7 +45,7 @@ func (s *ServiceImpl) Get() ([]Campaign, error) {
 func (s *ServiceImpl) GetByID(id string) (*contract.CampaignReduced, error) {
 	result, err := s.Repository.GetByID(id)
 	if err != nil {
-		return nil, internalerrors.GetError(err)
+		return nil, internalerrors.GetError(err, "")
 	}
 
 	return &contract.CampaignReduced{
@@ -60,13 +59,9 @@ func (s *ServiceImpl) GetByID(id string) (*contract.CampaignReduced, error) {
 }
 
 func (s *ServiceImpl) Delete(id string) error {
-	result, err := s.Repository.GetByID(id)
+	result, err := s.getCampaignWithStatusValidation(id)
 	if err != nil {
-		return internalerrors.GetError(err)
-	}
-
-	if result.Status != Pending {
-		return errors.New("campaign status invalid")
+		return err
 	}
 
 	result.Delete()
@@ -81,13 +76,9 @@ func (s *ServiceImpl) Delete(id string) error {
 }
 
 func (s *ServiceImpl) Start(id string) error {
-	result, err := s.Repository.GetByID(id)
+	result, err := s.getCampaignWithStatusValidation(id)
 	if err != nil {
-		return internalerrors.GetError(err)
-	}
-
-	if result.Status != Pending {
-		return errors.New("campaign status invalid")
+		return err
 	}
 
 	err = s.SendEmail(result)
@@ -103,4 +94,17 @@ func (s *ServiceImpl) Start(id string) error {
 	}
 
 	return nil
+}
+
+func (s *ServiceImpl) getCampaignWithStatusValidation(id string) (*Campaign, error) {
+	result, err := s.Repository.GetByID(id)
+	if err != nil {
+		return nil, internalerrors.GetError(err, "")
+	}
+
+	if result.Status != Pending {
+		return nil, internalerrors.GetError(err, "campaign status invalid")
+	}
+
+	return result, nil
 }
