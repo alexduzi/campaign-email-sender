@@ -108,3 +108,33 @@ func Test_NewCampaign_CreatedByIsEmpty(t *testing.T) {
 
 	assert.Equal("createdby is required with min 5", err.Error())
 }
+
+func Test_Done_ChangeStatus(t *testing.T) {
+	assert := assert.New(t)
+
+	campaign, _ := NewCampaign(name, content, contacts, createdBy)
+
+	campaign.Done()
+
+	assert.Equal(Done, campaign.Status)
+}
+
+func Test_Started_ChangeStatus(t *testing.T) {
+	assert := assert.New(t)
+
+	campaign, _ := NewCampaign(name, content, contacts, createdBy)
+
+	campaign.Started()
+
+	assert.Equal(Started, campaign.Status)
+}
+
+func Test_Cancel_ChangeStatus(t *testing.T) {
+	assert := assert.New(t)
+
+	campaign, _ := NewCampaign(name, content, contacts, createdBy)
+
+	campaign.Cancel()
+
+	assert.Equal(Canceled, campaign.Status)
+}

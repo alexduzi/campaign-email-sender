@@ -82,8 +82,6 @@ func (s *ServiceImpl) Start(id string) error {
 		return err
 	}
 
-	go s.SendEmailAndUpdateStatus(result)
-
 	result.Started()
 
 	err = s.Repository.Update(result)

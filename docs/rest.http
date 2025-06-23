@@ -18,7 +18,7 @@ Authorization: Bearer {{access_token}}
 
 ###
 
-GET {{url}}/campaigns/d1cq8r9mcbhuh8v6hm00
+GET {{url}}/campaigns/d1cr99pmcbhococ03s90
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
 

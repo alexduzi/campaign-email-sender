@@ -1,15 +1,16 @@
 package endpoints
 
 import (
+	"campaignemailsender/internal/infrastructure/credentials"
 	"context"
 	"net/http"
-	"os"
-	"strings"
 
-	oidc "github.com/coreos/go-oidc/v3/oidc"
-	"github.com/dgrijalva/jwt-go"
 	"github.com/go-chi/render"
 )
+
+type ValidateTokenFunc func(token string, ctx context.Context) (string, error)
+
+var ValidateToken ValidateTokenFunc = credentials.ValidateToken
 
 func Auth(nex http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -22,26 +23,13 @@ func Auth(nex http.Handler) http.Handler {
 			return
 		}
 
-		tokenString = strings.Replace(tokenString, "Bearer ", "", 1)
-		provider, err := oidc.NewProvider(r.Context(), os.Getenv("KEYCLOAK"))
-		if err != nil {
-			render.Status(r, http.StatusInternalServerError)
-			render.JSON(w, r, map[string]string{"error": "error to connect to the provider"})
-			return
-		}
+		email, err := ValidateToken(tokenString, r.Context())
 
-		verifier := provider.Verifier(&oidc.Config{ClientID: "emailn"})
-		// verifier := provider.Verifier(&oidc.Config{SkipClientIDCheck: true})
-		_, err = verifier.Verify(r.Context(), tokenString)
 		if err != nil {
 			render.Status(r, http.StatusUnauthorized)
-			render.JSON(w, r, map[string]string{"error": "invalid token"})
+			render.JSON(w, r, map[string]string{"error": err.Error()})
 			return
 		}
-
-		token, _ := jwt.Parse(tokenString, nil)
-		claims := token.Claims.(jwt.MapClaims)
-		email := claims["email"]
 
 		ctx := context.WithValue(r.Context(), "email", email)
 
