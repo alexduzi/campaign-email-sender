@@ -11,5 +11,9 @@ func (h *Handler) CampaignStart(w http.ResponseWriter, r *http.Request) (interfa
 
 	err := h.CampaignService.Start(id)
 
+	if err != nil {
+		return nil, 500, err
+	}
+
 	return nil, 204, err
 }
