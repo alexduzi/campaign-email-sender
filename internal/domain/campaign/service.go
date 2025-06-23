@@ -81,12 +81,17 @@ func (s *ServiceImpl) Start(id string) error {
 		return err
 	}
 
-	err = s.SendEmail(result)
-	if err != nil {
-		return internalerrors.ErrInternal
-	}
+	go func() {
+		err := s.SendEmail(result)
+		if err != nil {
+			result.Fail()
+		} else {
+			result.Done()
+		}
+		s.Repository.Update(result)
+	}()
 
-	result.Done()
+	result.Started()
 
 	err = s.Repository.Update(result)
 	if err != nil {

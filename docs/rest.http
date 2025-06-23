@@ -11,9 +11,9 @@ POST {{url}}/campaigns
 Authorization: Bearer {{access_token}}
 
 {
-    "name": "mouse 6",
-    "content": "change password",
-    "emails": ["test1@gmail.com", "test2@gmail.com", "test3@gmail.com"]
+    "name": "Test send email",
+    "content": "Test sending email body!",
+    "emails": ["duzihd@gmail.com", "test2@gmail.com", "test3@gmail.com"]
 }
 
 ###

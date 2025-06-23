@@ -12,6 +12,7 @@ const (
 	Canceled string = "Canceled"
 	Deleted  string = "Deleted"
 	Started  string = "Started"
+	Fail     string = "Fail"
 	Done     string = "Done"
 )
 
@@ -41,6 +42,14 @@ func (c *Campaign) Delete() {
 
 func (c *Campaign) Done() {
 	c.Status = Done
+}
+
+func (c *Campaign) Fail() {
+	c.Status = Fail
+}
+
+func (c *Campaign) Started() {
+	c.Status = Started
 }
 
 func NewCampaign(name string, content string, emails []string, createdBy string) (*Campaign, error) {
